@@ -29,7 +29,7 @@ BLANKBIN := ./$(FIRMWAREDIR)/blank.bin
 BLANKADDR := 0x7E000
 
 # Base directory for the compiler
-XTENSA_TOOLS_ROOT ?= c:/Espressif/xtensa-lx106-elf/bin
+XTENSA_TOOLS_ROOT ?= $(ESP_HOME)/esp-open-sdk/xtensa-lx106-elf/bin
 
 #PATH := $(XTENSA_TOOLS_ROOT);$(PATH)
 # base directory of the ESP8266 SDK package, absolute
@@ -46,7 +46,7 @@ OBJDUMP := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-objdump
 
 SDK_TOOLS	?= c:/Espressif/utils
 #ESPTOOL		?= $(SDK_TOOLS)/esptool
-ESPTOOL		?= C:/Python27/python.exe $(CWD)esptool.py
+ESPTOOL		?= $(ESP_HOME)/esp-open-sdk/esptool/esptool.py
 
 CSRCS ?= $(wildcard *.c)
 ASRCs ?= $(wildcard *.s)

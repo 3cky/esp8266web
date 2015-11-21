@@ -8,8 +8,8 @@
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
 # Foundation; either version 2 of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful, but WITHOUT 
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #
@@ -96,7 +96,7 @@ class ESPROM:
         for b in data:
             state ^= ord(b)
         return state
-        
+
     """ Send a request and read the response """
     def command(self, op=None, data=None, chk=0):
         if op:
@@ -126,9 +126,9 @@ class ESPROM:
         self.command(ESPROM.ESP_SYNC, '\x07\x07\x12\x20' + 32 * '\x55')
         for i in xrange(7):
             self.command()
-        # WiFi Off, Power 32 mA -> 14 mA 	
+        # WiFi Off, Power 32 mA -> 14 mA
         self.write_reg(0x60000710, 0x0, 0xffffffff)
-  
+
     """ Try connecting repeatedly until successful, or giving up """
     def connect(self):
         print 'Connecting...'
@@ -351,7 +351,7 @@ class ESPROM:
         # It it on the other hand unlikely to fail.
 
 class ESPFirmwareImage:
-    
+
     def __init__(self, filename=None):
         self.segments = []
         self.entrypoint = 0
@@ -361,11 +361,11 @@ class ESPFirmwareImage:
         if filename is not None:
             f = file(filename, 'rb')
             (magic, segments, self.flash_mode, self.flash_size_freq, self.entrypoint) = struct.unpack('<BBBBI', f.read(8))
-            
+
             # some sanity check
             if magic != ESPROM.ESP_IMAGE_MAGIC or segments > 16:
                 raise Exception('Invalid firmware image')
-        
+
             for i in xrange(segments):
                 (offset, size) = struct.unpack('<II', f.read(8))
                 if offset > 0x40200000 or offset < 0x3ffe0000 or size > 65536:
@@ -392,7 +392,7 @@ class ESPFirmwareImage:
         f = file(filename, 'wb')
         f.write(struct.pack('<BBBBI', ESPROM.ESP_IMAGE_MAGIC, len(self.segments),
             self.flash_mode, self.flash_size_freq, self.entrypoint))
-            
+
         checksum = ESPROM.ESP_CHECKSUM_MAGIC
         for (offset, size, data) in self.segments:
             f.write(struct.pack('<II', offset, size))
@@ -415,7 +415,7 @@ class ELFFile:
             return
         self.symbols = {}
         try:
-            tool_nm = "C:\\Espressif\\xtensa-lx106-elf\\bin\\xtensa-lx106-elf-nm.exe"
+            tool_nm = "xtensa-lx106-elf-nm"
             if os.getenv('XTENSA_CORE') == 'lx106':
                 tool_nm = "xt-nm"
             proc = subprocess.Popen([tool_nm, self.name], stdout=subprocess.PIPE)
@@ -427,16 +427,16 @@ class ELFFile:
             try:
                 self.symbols[fields[2]] = int(fields[0], 16)
             except ValueError as verr:
-                pass  
+                pass
             except Exception as ex:
-                pass 
+                pass
 
     def get_symbol_addr(self, sym):
         self._fetch_symbols()
         return self.symbols[sym]
 
     def load_section(self, section):
-        tool_objcopy = "C:\\Espressif\\xtensa-lx106-elf\\bin\\xtensa-lx106-elf-objcopy.exe"
+        tool_objcopy = "xtensa-lx106-elf-objcopy"
         if os.getenv('XTENSA_CORE') == 'lx106':
             tool_objcopy = "xt-objcopy"
         tmpsection = tempfile.mktemp(suffix=".section")
@@ -670,7 +670,7 @@ if __name__ == '__main__':
         e = ELFFile(args.input)
         image = ESPFirmwareImage()
         image.entrypoint = e.get_symbol_addr(args.entry_symbol)
-       
+
         for section, start in ((".text", "_text_start"), (".data", "_data_start"), (".rodata", "_rodata_start")):
             data = e.load_section(section)
             image.add_segment(e.get_symbol_addr(start), data)
@@ -686,7 +686,7 @@ if __name__ == '__main__':
         f = open(args.output + "0x%05x.bin" % off, "wb")
         f.write(data)
         f.close()
-        print "{0:>10}|{1:>30}|{2:>12}|{3:>12}|{4:>8}".format("Section", "Description", "Start (hex)", "End (hex)", "Used space")         
+        print "{0:>10}|{1:>30}|{2:>12}|{3:>12}|{4:>8}".format("Section", "Description", "Start (hex)", "End (hex)", "Used space")
         print "------------------------------------------------------------------------------"
         sec_name = ["data", "rodata", "bss", "lit4", "text", "irom0_text"]
         sec_des = ["Initialized Data (RAM)", "ReadOnly Data (RAM)", "Uninitialized Data (RAM)", "Uninitialized Data (IRAM)", "Uncached Code (IRAM)", "Cached Code (SPI)"]
