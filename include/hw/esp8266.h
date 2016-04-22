@@ -69,7 +69,7 @@ extern volatile uint32 io4_regs_[384];	// 0x60009800
 #define I2S_BASE		i2s_		// 0x60000E00
 #define UART1_BASE		uart1_		// 0x60000F00
 #define RTC_RAM_BASE	rtc_ram_	// 0x60001000	// Size: 1024 bytes
-#define RTC_MEM_BASE	rtc_mem_	// 0x60001100
+#define RTC_MEM_BASE	rtc_mem_	// 0x60001100   // Size: 768 bytes, 192 dword registers, user data последние 512 байт
 
 /* io4 section */
 #define IO4_BASE		io4_regs_	// 0x60009800	// Size: 1536 bytes
@@ -128,13 +128,15 @@ extern volatile uint32 io4_regs_[384];	// 0x60009800
 #define Select_CLKx1() CLK_PRE_PORT = (CLK_PRE_PORT >> 1) << 1
 
 // 0x3FF00018
-//#define DPORT_OFF18		dport_[6] // use clockgate_watchdog(flg) { if(flg) 0x3FF00018 &= 0x77; else 0x3FF00018 |= 8; }
+#define DPORT_OFF18		dport_[6] // use clockgate_watchdog(flg) { if(flg) 0x3FF00018 &= 0x77; else 0x3FF00018 |= 8; }
 
 /* 0x3ff00020 is isr flag register, (ESP8266 SPI Module User Guide)
+  bit0 is for uart0 isr
+  bit2 is for uart1 isr
   bit4 is for spi isr,
   bit7 is for hspi isr,
   bit9 is for i2s isr */
-//#define DPORT_OFF20		dport_[8]
+#define DPORT_OFF20		dport_[8]
 
 /* 0x3ff00024
  bit7 16k IRAM base 0x40108000 = SPI cache flash  
@@ -486,15 +488,18 @@ typedef enum {
 /* RTC_SLP_VAL: 0x60000704 */
 #define IO_RTC_SLP_VAL			rtc_[1]	// the target value of RTC_COUNTER for wakeup from light-sleep/deep-sleep
 //0x60000708
-#define IO_RTC_2				rtc_[2]	// bit21 - rtc_get_reset_reason(), bit20 - rtc_enter_sleep()
+#define IO_RTC_2				rtc_[2]	// bit21 - rtc_get_reset_reason() { & (1<<21) }, bit20 = 1 - rtc_enter_sleep()
 //0x6000070C
 #define IO_RTC_3				rtc_[3]
 //0x60000710
 #define IO_RTC_4				rtc_[4] // rtc_enter_sleep() = 0;
+// IO_RTC_4 = 0 - отключение WiFi
+//bit31 =1 источник тактирования для I2S, ... = PLL (80MHz)
+//bit25,26 =1 источник тактирования для SAR ... = PLL (80MHz)
 //0x60000714
-#define IO_RTC_5				rtc_[5]	// bitrtc_get_reset_reason()
+#define IO_RTC_5				rtc_[5]	// bit0..3: rtc_get_reset_reason()
 //0x60000718
-#define IO_RTC_6				rtc_[6]	// bitrtc_get_reset_reason()
+#define IO_RTC_6				rtc_[6]	// rtc_get_reset_reason()
 /* RTC_SLP_CNT_VAL:	0x6000071C */
 #define IO_RTC_SLP_CNT_VAL		rtc_[7]	// the current value of RTC_COUNTER
 /* IO_RTC_INT_ST:	0x60000720 */
@@ -590,8 +595,8 @@ typedef enum {
 #define GPIO_MUX_FUN_MASK			((1<<GPIO_MUX_FUN_BIT0)|(1<<GPIO_MUX_FUN_BIT1)|(1<<GPIO_MUX_FUN_BIT2))
 
 #define VAL_MUX_GPIO0_SDK_DEF	(1<<GPIO_MUX_PULLUP_BIT)	// GPIO0, input
-#define VAL_MUX_GPIO1_SDK_DEF	0		// UART0, TX0, Outnput
-#define VAL_MUX_GPIO2_SDK_DEF	0		// UART1, TX1, Outnput
+#define VAL_MUX_GPIO1_SDK_DEF	0		// UART0, TX0, Output
+#define VAL_MUX_GPIO2_SDK_DEF	0		// UART1, TX1, Output
 #define VAL_MUX_GPIO3_SDK_DEF	(1<<GPIO_MUX_PULLUP_BIT)	// UART0, RX0, Input
 #define VAL_MUX_GPIO4_SDK_DEF	(1<<GPIO_MUX_PULLUP_BIT)	// GPIO4, input
 #define VAL_MUX_GPIO5_SDK_DEF	(1<<GPIO_MUX_PULLUP_BIT)	// GPIO5, input
@@ -607,8 +612,8 @@ typedef enum {
 #define VAL_MUX_GPIO15_SDK_DEF	((1<<GPIO_MUX_FUN_BIT0) | (1<<GPIO_MUX_FUN_BIT1) | (1<<GPIO_MUX_PULLUP_BIT))	// GPIO15, input
 
 #define VAL_MUX_GPIO0_IOPORT	(1<<GPIO_MUX_PULLUP_BIT)	// GPIO0, input
-#define VAL_MUX_GPIO1_IOPORT	((1<<GPIO_MUX_FUN_BIT0) | (1<<GPIO_MUX_FUN_BIT1) | (1<<GPIO_MUX_PULLUP_BIT))	// UART0, TX0, Outnput
-#define VAL_MUX_GPIO2_IOPORT	(1<<GPIO_MUX_PULLUP_BIT)	// UART1, TX1, Outnput
+#define VAL_MUX_GPIO1_IOPORT	((1<<GPIO_MUX_FUN_BIT0) | (1<<GPIO_MUX_FUN_BIT1) | (1<<GPIO_MUX_PULLUP_BIT))	// UART0, TX0, Output
+#define VAL_MUX_GPIO2_IOPORT	(1<<GPIO_MUX_PULLUP_BIT)	// UART1, TX1, Output
 #define VAL_MUX_GPIO3_IOPORT	((1<<GPIO_MUX_FUN_BIT0) | (1<<GPIO_MUX_FUN_BIT1) | (1<<GPIO_MUX_PULLUP_BIT))	// UART0, RX0, Input
 #define VAL_MUX_GPIO4_IOPORT	(1<<GPIO_MUX_PULLUP_BIT)	// GPIO4, input
 #define VAL_MUX_GPIO5_IOPORT	(1<<GPIO_MUX_PULLUP_BIT)	// GPIO5, input
@@ -746,6 +751,32 @@ bit13 =1 SDIO dataoutput is at positive edges (SDIO V2.0)
 #define SLC_HOST_INTR_ENA	scl_[45]
 /* SLC_HOST_CONF_W5:0x60000BB8 */
 #define SLC_HOST_CONF_W5	scl_[46]
+
+/* SAR_?:0x60000D50 */
+#define SAR_CFG sar_[20]
+// Бит 1: запуск нового замера SAR
+// Бит 2..4: кол-во значений в SAR_DATA 0..7 -> 1..8
+// Бит 24..26: готовность r_state = 0
+/* SAR_?:0x60000D54 */
+#define SAR_TIM1 sar_[21]
+/* SAR_?:0x60000D58 */
+#define SAR_TIM2 sar_[22]
+/* SAR_?:0x60000D5С */
+#define SAR_CFG1 sar_[23]
+// Бит 21: ?
+/* SAR_?:0x60000D60 */
+#define SAR_CFG2 sar_[24]
+// Бит 1: ?
+/* SAR_DATA : 0x60000D80 */
+#define SAR_DATA sar_[32]
+#define SAR_W0 	 sar_[32]
+#define SAR_W1 	 sar_[33]
+#define SAR_W2 	 sar_[34]
+#define SAR_W3 	 sar_[35]
+#define SAR_W4 	 sar_[36]
+#define SAR_W5 	 sar_[37]
+#define SAR_W6 	 sar_[38]
+#define SAR_W7 	 sar_[39]
 
 /* USER RTC RAM:	0x60001100 */
 #define RTC_MEM(IDX)	rtc_mem_[IDX]

@@ -42,7 +42,7 @@ struct ets_store_wifi_hdr { // Sector flash addr flashchip->chip_size-0x1000  (0
 //-----------------------------------------------------------------------------
 struct s_wifi_store { // WiFi config flash addr: flashchip->chip_size - 0x3000 or -0x2000
 #if DEF_SDK_VERSION >= 1400 // SDK >= 1.4.0
-	uint8	field_000[8];	//+000  g_ic+? 464 boot_version // 3FFF0834
+	uint8	boot_info[8];	//+000  g_ic+? 504 boot_version SDK 1.5.2 // 0x3FFEF164
 	uint8 	wfmode[4];		//+008  g_ic.c[0x1D8] (+472) SDK 1.3.0 // 3FFF083C
 	uint32	st_ssid_len;	//+012  g_ic+?
 	uint8	st_ssid[32];	//+016
@@ -80,7 +80,7 @@ struct s_wifi_store { // WiFi config flash addr: flashchip->chip_size - 0x3000 o
 	uint32  field_880;		//+880
 	uint32  field_884;		//+884
 #elif DEF_SDK_VERSION >= 1299 // SDK >= 1.3.0
-	uint8	field_000[8];	//+000  g_ic+? 464 boot_version // 3FFF0834
+	uint8	boot_info[8];	//+000  g_ic+? 464 boot_version // 3FFF0834
 	uint8 	wfmode[4];		//+008  g_ic.c[0x1D8] (+472) SDK 1.3.0 // 3FFF083C
 	uint32	st_ssid_len;	//+012  g_ic+?
 	uint8	st_ssid[32];	//+016
@@ -117,7 +117,7 @@ struct s_wifi_store { // WiFi config flash addr: flashchip->chip_size - 0x3000 o
 	uint32  field_880;		//+880
 	uint32  field_884;		//+880
 #elif DEF_SDK_VERSION >= 1200 // SDK >= 1.2.0
-	uint8	field_000[8];	//+000  g_ic+? 488 boot_version // 0x3FFF2530
+	uint8	boot_info[8];	//+000  g_ic+? 488 boot_version // 0x3FFF2530
 	uint8 	wfmode[4];		//+008  g_ic.c[0x214] (+532) SDK 1.2.0 // 3FFF2538
 	uint32	st_ssid_len;	//+012  g_ic+? 500
 	uint8	st_ssid[32];	//+016
@@ -143,7 +143,7 @@ struct s_wifi_store { // WiFi config flash addr: flashchip->chip_size - 0x3000 o
 	uint16	beacon;			//+876 // 0x3FFF289C g_ic+1400
 	uint8	field_878[10];	//+878
 #else
-	uint8	field_000[8];	//+000  g_ic+488 boot_version g_ic+0x1D9
+	uint8	boot_info[8];	//+000  //+000  g_ic+488 boot_version g_ic+0x1D9
 	uint8 	wfmode[4];		//+008  g_ic+496 +0x1F0 SDK1.1.0
 	uint32	st_ssid_len;	//+012  g_ic+500
 	uint8	st_ssid[32];	//+016
@@ -177,7 +177,10 @@ struct s_wifi_store { // WiFi config flash addr: flashchip->chip_size - 0x3000 o
   size struct s_wifi_store: 1156
   1156 + 500 = 1656 байт
 */
-#if DEF_SDK_VERSION >= 1400 // SDK >= 1.4.0
+#if DEF_SDK_VERSION >= 1500 // SDK >= 1.5.0
+#define wifi_config_size 0x484 // 1156 bytes
+#define g_ic_size (wifi_config_size + 504) // 1660 bytes
+#elif DEF_SDK_VERSION >= 1400 // SDK >= 1.4.0
 #define wifi_config_size 0x484 // 1156 bytes
 #define g_ic_size (wifi_config_size + 500) // 1656 bytes
 #elif DEF_SDK_VERSION >= 1300 // SDK >= 1.3.0
@@ -227,7 +230,9 @@ struct	s_g_ic{
 	uint32	field_1BC;		//+01BC g_ic+444
 	uint32	field_1C0;		//+01C0 g_ic+448
 	uint32	field_1C4;		//+01C4 g_ic+452
-#if DEF_SDK_VERSION >= 1400 // SDK >= 1.4.0
+#if DEF_SDK_VERSION >= 1500 // SDK >= 1.4.0
+	uint32	field_1C8[12];	//+01C8 g_ic+456 504-456
+#elif DEF_SDK_VERSION >= 1400 // SDK >= 1.4.0
 	uint32	field_1C8[11];	//+01C8 g_ic+456 500-456
 #elif DEF_SDK_VERSION >= 1300 // SDK >= 1.3.0
 	uint8	field_1C8[8];	//+01C8 g_ic+456 464-456

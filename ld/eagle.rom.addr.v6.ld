@@ -36,6 +36,7 @@ PROVIDE ( SPIReadModeCnfig = 0x400048ec );
 PROVIDE ( SPIUnlock = 0x40004878 );
 PROVIDE ( SPIWrite = 0x40004a4c );
 PROVIDE ( SelectSpiFunction = 0x40003f58 );
+PROVIDE ( SPILoader = 40001308 );
 PROVIDE ( SendMsg = 0x40003cf4 );
 PROVIDE ( UartConnCheck = 0x40003230 );
 PROVIDE ( UartConnectProc = 0x400037a0 );
@@ -136,7 +137,7 @@ PROVIDE ( ets_isr_unmask = 0x40000fa8 );
 PROVIDE ( ets_memcmp = 0x400018d4 );
 PROVIDE ( ets_memcpy = 0x400018b4 );
 PROVIDE ( ets_memmove = 0x400018c4 );
-PROVIDE ( ets_memset = 0x400018a4 );
+PROVIDE ( ets_memset = 0x400018a4 ); 
 PROVIDE ( ets_post = 0x40000e24 );
 PROVIDE ( ets_printf = 0x400024cc );
 PROVIDE ( ets_putc = 0x40002be8 );
@@ -347,6 +348,10 @@ PROVIDE ( xthal_spill_registers_into_stack_nw = 0x4000e320 );
 PROVIDE ( xthal_window_spill = 0x4000e324 );
 PROVIDE ( xthal_window_spill_nw = 0x4000e320 );
 
+PROVIDE ( Td0 = 0x3fffd100 );
+PROVIDE ( Td4s = 0x3fffd500);
+PROVIDE ( rcons = 0x3fffd0f0);
+
 PROVIDE ( Te0 = 0x3fffccf0 );
 PROVIDE ( UartDev = 0x3fffde10 );
 PROVIDE ( rtc_calib = 0x3fffc700 );
@@ -376,6 +381,7 @@ PROVIDE ( ets_tab_task = 0x3FFFDAC0 );
 PROVIDE ( timer_list = 0x3FFFDDB0 );
 /*PROVIDE ( debug_timer = 0x3FFFDDB4 );
 PROVIDE ( debug_timerfn = 0x3FFFDDB8 ); */
+PROVIDE ( rom_bss_end = 0x3FFFEB30 ); /* stask: 0x3FFFEB30..0x3FFFFFFF 0x14D0 = 5328 bytes */
 
 /* 0x3FFFE360..0x3FFFEA80 ram buf max 1824 bytes */
 PROVIDE ( _sprintf_buf = 0x3FFFE360 ); /* char * _sprintf_buf; - use ets_sprintf */
