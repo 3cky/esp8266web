@@ -6,7 +6,6 @@
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -25,6 +24,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.819610914" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option id="gnu.c.compiler.option.include.paths.507674909" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp8266web/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp8266web/app/include/driver}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp8266web/app/include}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.982796560" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
@@ -89,7 +89,7 @@
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.mingw.base.1544080900.2027218786.810182178." name="/" resourcePath="">
 						<toolChain errorParsers="" id="cdt.managedbuild.toolchain.gnu.cross.base.1457569137" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base" unusedChildren="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1272816131" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="xtensa-lx106-elf-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1306314832" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="C:\Espressif\xtensa-lx106-elf\bin " valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1306314832" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="/home/avm/projects/other/esp8266/esp-open-sdk/bin" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.GNU_ELF;org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.2034374516" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/MinEspSDKLib}/createlib" enableAutoBuild="true" enableCleanBuild="true" errorParsers="" id="org.eclipse.cdt.build.core.internal.builder.1428344483" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" parallelBuildOn="false" superClass="org.eclipse.cdt.build.core.internal.builder"/>
 							<tool command="gcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} -c ${INPUTS}" errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.tool.gnu.cross.c.compiler.674891053" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">

@@ -4,3 +4,6 @@
 /CreateLib/
 /esp8266web.asm
 /eagle.app.v6.asm
+/lib/libsdk.a
+.output
+*.ovl

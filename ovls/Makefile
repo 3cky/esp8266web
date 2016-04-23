@@ -5,7 +5,8 @@
 #############################################################
 
 UPLOADOPTION = ./bin/tcp_client.ovl http://aesp8266/fsupload
-WEB_BASE := $(subst \,/,$(CWD))
+CWD := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))/
+WEB_BASE := $(CWD)../
 
 ADDR_FW1 = 0x00000
 ADDR_FW2 = 0x10000
@@ -33,8 +34,8 @@ CCFLAGS += -Os -Wall -Wno-pointer-sign -fno-tree-ccp -mno-target-align -mno-seri
 #
 
 SDK_TOOLS	?= c:/Espressif/utils
-ESPTOOL		?= C:/Python27/python.exe $(CWD)esptool.py
-UPLOADTOOL  ?= C:/Python27/python.exe $(CWD)ovl_upload.py
+ESPTOOL		?= python $(CWD)esptool.py
+UPLOADTOOL  ?= python $(CWD)ovl_upload.py
 
 CSRCS ?= $(wildcard *.c)
 ASRCs ?= $(wildcard *.s)
@@ -72,6 +73,7 @@ CCFLAGS += \
 	-Werror	\
 	-Wl,-EL	\
 	-fno-inline-functions	\
+	-fno-strict-aliasing \
 	-nostdlib	\
 	-mlongcalls	\
 	-mtext-section-literals
