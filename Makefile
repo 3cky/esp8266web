@@ -6,7 +6,7 @@
 
 ESPOPTION ?= -p /dev/ttyUSB0 -b 460800
 
-UPLOADADDR = http://aesp8266/fsupload
+UPLOADADDR = http://sesp8266/fsupload
 
 UPLOADOVL = ./ovls/bin/ina219.ovl
 
